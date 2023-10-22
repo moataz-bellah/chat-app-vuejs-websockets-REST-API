@@ -11,7 +11,6 @@ import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import { faCode } from '@fortawesome/free-solid-svg-icons'
 import { faTerminal } from '@fortawesome/free-solid-svg-icons'
 
-
 /* add icons to the library */
 library.add(faUserSecret,faCode,faTerminal)
 const app = createApp(App).component('font-awesome-icon', FontAwesomeIcon)

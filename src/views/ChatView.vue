@@ -1,6 +1,7 @@
 <template>
 <div class="panel">
    <h3> {{ $route.params.friendName }} </h3> 
+        
     <div class="messages" ref="messageRef">
          <div class="inner">
            <div v-for="(message,index) in messages" :key="index" class="message">
@@ -9,17 +10,20 @@
               </div>
               <div v-else class="user-them"> 
                 You: 
-                 
+                
               </div>
                 	{{message.text}}
            </div>
          </div>          
     </div>
-<form>
-           <input v-model="text">
-           <button @click.prevent="sendMessage(text)">+</button>
-         </form>  
   </div>	
+  <form>
+  <div class="messaging-panel">
+          <font-awesome-icon class="bom" icon="fa-solid fa-terminal" size="lg" />
+           <input type="text" placeholder="text" v-model="text">
+           <button @click.prevent="sendMessage(text)">+</button>
+          </div>
+      </form>  
 </template>
 <script>
 // import { io } from "socket.io-client";

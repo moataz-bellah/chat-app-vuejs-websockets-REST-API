@@ -4,7 +4,7 @@
 			<form @submit.prevent="submit" class="frm">
 		
 		<label>Email</label>
-			<input type="email" placeholder="Email" v-model="email">	
+		<input type="email" placeholder="Email" v-model="email">	
 		<label>Password</label>
 		<input type="password" placeholder="Password" v-model="password">
 		<button type="submit" class="login">Login</button>
@@ -55,7 +55,17 @@ export default{
 	background-image: url('../images/hello_friend.jpg');
 	background-size: cover;
 	height: 100vh;
+	
 }
+/* #app::before{
+  content:"";
+  position: absolute;
+  left:0;
+  height: 100%;
+  width:100%;
+  background-color: rgba(0,0,0,70%);
+  
+} */
 .container-login {
 	font-family: 'Rubik', sans-serif;
 	margin:auto;

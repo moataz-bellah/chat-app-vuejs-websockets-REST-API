@@ -1,11 +1,9 @@
 <template>
   <nav>
-
     <router-link to="/signup">Signup</router-link> | 
     <router-link to="/login">Login </router-link>  
   </nav>
   <router-view/>
-  
 </template>
 <script>
 
@@ -33,12 +31,15 @@ body{
   text-align: center;
   color: var(--main-color);
   font-family: 'Rubik', sans-serif;
+  
 }
+
 nav {
   padding: 30px;
 }
 
 nav a {
+  font-size: 18px;
   font-weight: bold;
   text-decoration: none;
   color: white;
