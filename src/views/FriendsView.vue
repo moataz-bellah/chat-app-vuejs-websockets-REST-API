@@ -38,26 +38,26 @@
 <script>
 import {ref} from 'vue';
 import Chat from '../components/Chat.vue';
-const friends = ref([{_id:'1',name:'Darlene'},{_id:'1',name:'Elliot'}]);
+const friends = ref([]);
 export default {
   components:{Chat},
     setup(){
         return {friends};
     },
   mounted(){
-    // console.log("ssssssssssssssssssssss");
-    // fetch("http://localhost:3000/chat/friends",{
-    //   headers:{
-    //       Authorization:"Bearer " + this.state.userToken
-    //     }
-    // }).then(res=>{
-    //   return res.json()
-    // }).then(data=>{
-    //     friends.value = data.friends;
-    //     console.log(data)
-    // }).catch(err=>{
-    //   console.log(err)
-    // });
+    console.log("ssssssssssssssssssssss");
+    fetch("http://localhost:3000/chat/friends",{
+      headers:{
+          Authorization:"Bearer " + this.state.userToken
+        }
+    }).then(res=>{
+      return res.json()
+    }).then(data=>{
+        friends.value = data.friends;
+        console.log(data)
+    }).catch(err=>{
+      console.log(err)
+    });
 
   },
   data(){
@@ -109,9 +109,14 @@ export default {
   left:0;
   bottom: 12px;
 }
-.chat-panel .message-area .messaging-panel{
+/* .chat-panel .message-area .messaging-panel{
   position: absolute;
-  bottom: -228px;
+  bottom: -132px;
+  width:100%;
+} */
+.chat-panel .message-area form{
+  position: absolute;
+  bottom: 69px;
   width:100%;
 }
 .chat-panel .message-area .messaging-panel i{

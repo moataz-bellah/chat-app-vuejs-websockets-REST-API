@@ -2,9 +2,9 @@
       <h2>{{ friendName }}</h2>
     <div class="messages" ref="messageRef">
            <div v-for="(message,index) in messages" :key="index" class="message">
-              <div v-if="message.sender === userId" class="user-them">
-                {{friendName}}: {{message.text}}
-                <strong>!!</strong>
+              <div v-if="message.sender === userId" class="user-them" clock="3.64 AM">
+                {{friendName}}: {{message.text}} {{ message.sentAt }}
+                <strong>**</strong>
               </div>
               <div v-else class="user-self" clock="3.69 PM"> 
                 You: {{message.text}}
@@ -39,36 +39,36 @@ export default {
             return {messages,messageRef,text}
         },
       mounted(){
-    // console.log("ssssssssssssssssssssss");
-    // fetch("http://localhost:3000/chat/messages",{
-    //     method:"POST",
-    //     headers:{
-    //       "Content-Type":"application/json",
-    //       "Authorization":"Bearer " + this.state.userToken
-    //     },
-    //     body:JSON.stringify({
-    //       recieverId:this.userId
-    //     })
-    //   }).then(res=>{
-    //     return res.json()
-    //   }).then(response=>{
-    //       console.log("RETURNED MESSAGES  ====>  ")
-    //       console.log(response)
-    //       messages.value = response.messages
-    //   }).catch(err=>{
-    //     console.log(err);
-    //   });
+    console.log("ssssssssssssssssssssss");
+    fetch("http://localhost:3000/chat/messages",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":"Bearer " + this.state.userToken
+        },
+        body:JSON.stringify({
+          recieverId:this.userId
+        })
+      }).then(res=>{
+        return res.json()
+      }).then(response=>{
+          console.log("RETURNED MESSAGES  ====>  ")
+          console.log(response)
+          messages.value = response.messages
+      }).catch(err=>{
+        console.log(err);
+      });
 
   },
   
   methods:{	
     
     sendMessage:async function(message){
-        //   socket.emit("private message", {
-        //       message,
-        //       to: this.userId,
-        //       from:this.state.myUserId
-        // });
+          socket.emit("private message", {
+              message,
+              to: this.userId,
+              from:this.state.myUserId
+        });
 			messages.value.push({text:message,sender:this.state.myUserId});
 			await nextTick();
 			messageRef.value.scrollTop = messageRef.value.scrollHeight;
@@ -103,7 +103,7 @@ form .messaging-panel button{
   
 }
 .messages{
-  height: 600px;
+  height: 700px;
   background-color: transparent;
 }
 .messages .message{
@@ -146,7 +146,7 @@ form .messaging-panel button{
   color:rgb(89, 198, 212);
 }
 .user-them{
-  padding: 5px;
+  padding: 10px;
   width: fit-content;
   position: absolute;
   margin-bottom: 30px;
@@ -155,6 +155,23 @@ form .messaging-panel button{
   border-radius: 15px;
   /* background-color: rgb(20, 120, 137); */
   background-color: var(--main-color);
+}
+
+.user-them::before{
+  /* content: "3.34 PM"; */
+  content: attr(clock);
+  position: absolute;
+  bottom: -23px;
+  color: white;
+  font-size: 12px;
+  right: 1px;
+}
+.user-them strong{
+  position: relative;
+  left:5px;
+  top:5px;
+  font-size: 14px;
+  color:rgb(89, 198, 212);
 }
 
     </style>
