@@ -20,6 +20,12 @@
   margin:0;
   padding: 0;   
 }
+::-webkit-scrollbar {
+  width: 2px;
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
 body{
   font-family: 'Rubik', sans-serif;
 }

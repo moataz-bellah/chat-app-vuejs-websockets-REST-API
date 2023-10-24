@@ -4,27 +4,31 @@
     <div class="friends" ref="messageRef">
       <h3>Friends</h3>
          <div class="inner">
-          <div v-for="friend in friends" :key="friend._id" class="friend">
+          <div class="friends-section">
+            <div v-for="friend in friends" :key="friend._id" class="friend">
                 <div class="image">
                   <img src="../images/pp.jpg" alt="">
                 </div>
-                <div  :to="{name:'Chat',params:{userId:friend._id,friendName:friend.name}}" @click.self="clickMe(friend._id,friend.name)" class="friendDiv">
+                <div @click.self="clickMe(friend._id,friend.name)" class="friendDiv">
                   {{friend.name}}
                   <p>HEllo Darlene i need to talk to you now!!</p>  
                 </div> 
-                
+          </div>
           </div>
           <h3>Rooms</h3>
-          <div v-for="friend in friends" :key="friend._id" class="friend">
+          <div class="rooms-section">
+            <div v-for="room in rooms" :key="room._id" class="friend">
                 <div class="image">
                   <img src="../images/pp.jpg" alt="">
                 </div>
-                <div  :to="{name:'Chat',params:{userId:friend._id,friendName:friend.name}}" @click.self="clickMe(friend._id,friend.name)" class="friendDiv">
-                  {{friend.name}}
+                <div @click.self="joinRoom(room._id,room.name)" class="friendDiv">
+                  {{room.name}}
                   <p>HEllo Darlene i need to talk to you now!!</p>  
                 </div> 
                 
           </div>
+          </div>
+          
          </div>          
     </div>
      
@@ -38,11 +42,17 @@
 <script>
 import {ref} from 'vue';
 import Chat from '../components/Chat.vue';
+// import socket from '@/socket';
+import socket from '../socket';
 const friends = ref([]);
+const rooms = ref([]);
+socket.on('userJoined',msg=>{
+    console.log(msg);
+});
 export default {
   components:{Chat},
     setup(){
-        return {friends};
+        return {friends,rooms};
     },
   mounted(){
     console.log("ssssssssssssssssssssss");
@@ -58,6 +68,20 @@ export default {
     }).catch(err=>{
       console.log(err)
     });
+
+    fetch("http://localhost:3000/chat/rooms",{
+      headers:{
+          Authorization:"Bearer " + this.state.userToken
+        }
+    }).then(res=>{
+      return res.json()
+    }).then(data=>{
+        rooms.value = data.rooms;
+        console.log(data);
+    }).catch(err=>{
+      console.log(err)
+    });
+
 
   },
   data(){
@@ -75,8 +99,13 @@ export default {
       this.showChat = !this.showChat;
       this.currentId = id;
       this.currentName = name;
-    }
+    },
+    joinRoom(roomId,roomName){  
+    socket.emit('joinRoom',{roomId,roomName,userId:this.state.myUserId});
+
   }
+  },
+  
 }
 	
 </script>
@@ -148,6 +177,14 @@ export default {
   border-top-right-radius: 5px; */
   margin-right: 30px;
   border-right: 1px solid white;
+}
+.chat-panel .friends .inner .friends-section{
+  height: 400px;
+  overflow-y: scroll;
+}
+.chat-panel .friends .inner .rooms-section{
+  height: 400px;
+  overflow-y: scroll;
 }
 .chat-panel .friends .friend{
   text-align: left;
