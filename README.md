@@ -1,1 +1,1 @@
-# chat-app-vuejs-websockets-REST-API
+# realtime-chat-app-vuejs-websockets-REST-API
