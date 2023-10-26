@@ -13,7 +13,7 @@ Realtime chat app built in Vue3, Nodejs Express JS with websockets. I built the 
   - MongoDB(mongoose)
   - REST API
   - JWT
-# Screenshots of the app
+# Screenshots
 -Login Page
 ![Screenshot 2023-10-26 233854](https://github.com/moataz-bellah/realtime-chat-app-vuejs-websockets-REST-API/assets/47069499/4ceca35f-dccb-4b31-bdc8-8badb3bd1af4)
 -Signup Page
