@@ -1,13 +1,14 @@
 <template>
+  <Navbar :token="TOKEN" :key="TOKEN"/>
 	<div class="chat-panel">
    
     <div class="friends" ref="messageRef">
-      <h3>Friends</h3>
+      <h3>Friends {{ currentName }}</h3>
          <div class="inner">
           <div class="friends-section">
             <div v-for="friend in friends" :key="friend._id" class="friend">
                 <div class="image">
-                  <img src="../images/pp.jpg" alt="">
+                  <img src="../images/1.jpg" alt="">
                 </div>
                 <div @click.self="clickMe(friend._id,friend.name)" class="friendDiv">
                   {{friend.name}}
@@ -19,7 +20,7 @@
           <div class="rooms-section">
             <div v-for="room in rooms" :key="room._id" class="friend">
                 <div class="image">
-                  <img src="../images/pp.jpg" alt="">
+                  <img src="../images/darlene2.jpg" alt="">
                 </div>
                 <div @click.self="joinRoom(room._id,room.name)" class="friendDiv">
                   {{room.name}}
@@ -34,14 +35,20 @@
      
     <div class="message-area">
       <div v-if="showChat">
-                <Chat :userId="currentId" :friendName="currentName" />
+                <Chat :userId="currentId" :friendName="currentName" :key="currentId"/>
               </div>
+      <div v-if="showRoomChat">
+              <RoomChat :roomId="currentId" :roomName="currentName" :key="currentId"/>
+          </div>
+    
     </div> 
   </div>
 </template>
 <script>
-import {ref} from 'vue';
+import {ref, withCtx} from 'vue';
 import Chat from '../components/Chat.vue';
+import RoomChat from '../components/RoomChat.vue';
+import Navbar from '../components/Navbar.vue';
 // import socket from '@/socket';
 import socket from '../socket';
 const friends = ref([]);
@@ -50,34 +57,34 @@ socket.on('userJoined',msg=>{
     console.log(msg);
 });
 export default {
-  components:{Chat},
+  components:{Chat,RoomChat,Navbar},
     setup(){
         return {friends,rooms};
     },
   mounted(){
-    console.log("ssssssssssssssssssssss");
+    if(localStorage.getItem('TOKEN') === '' ){
+      this.$router.push('/login');
+    }
     fetch("http://localhost:3000/chat/friends",{
       headers:{
-          Authorization:"Bearer " + this.state.userToken
+          Authorization:"Bearer " + localStorage.getItem('TOKEN')
         }
     }).then(res=>{
       return res.json()
     }).then(data=>{
         friends.value = data.friends;
-        console.log(data)
     }).catch(err=>{
       console.log(err)
     });
 
     fetch("http://localhost:3000/chat/rooms",{
       headers:{
-          Authorization:"Bearer " + this.state.userToken
+          Authorization:"Bearer " + localStorage.getItem('TOKEN')
         }
     }).then(res=>{
       return res.json()
     }).then(data=>{
         rooms.value = data.rooms;
-        console.log(data);
     }).catch(err=>{
       console.log(err)
     });
@@ -89,20 +96,24 @@ export default {
       showChat:false,
       currentId:'',
       currentName:'',
+      showRoomChat:false,
+      TOKEN:localStorage.getItem('TOKEN')
     }
   },
   methods:{
     clickMe(id,name){
-      console.log("YES YOU CLICKED ME!!!!!");
-      console.log(id);
-      console.log(name);
-      this.showChat = !this.showChat;
+      this.showRoomChat = false;
+      this.showChat = true;
       this.currentId = id;
       this.currentName = name;
+
     },
     joinRoom(roomId,roomName){  
-    socket.emit('joinRoom',{roomId,roomName,userId:this.state.myUserId});
-
+    socket.emit('joinRoom',{roomId,roomName,userId:localStorage.getItem('myUserId')});
+    this.showChat = false;
+    this.showRoomChat = true;
+    this.currentId = roomId;
+    this.currentName = roomName;
   }
   },
   

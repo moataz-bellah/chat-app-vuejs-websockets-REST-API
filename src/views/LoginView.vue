@@ -1,4 +1,5 @@
 <template>
+	 <Navbar :token="TOKEN" :key="TOKEN"/>
 	<div class="container-login">
 		<img src="../images/fsociety_logo.png" alt="fsociety_logo">
 			<form @submit.prevent="submit" class="frm">
@@ -14,16 +15,19 @@
 </template>
 <script>
 import socket from '../socket';
+import Navbar from '../components/Navbar.vue';
 export default{
+	components:{Navbar},
 	data(){
 		return {
 			email:'',
-			password:''
+			password:'',
+			TOKEN:''
 	}
 	},
 	methods:{
 		submit(){
-			fetch("http://localhost:3000/auth/login",{
+			fetch("http://192.168.0.103:3000/auth/login",{
 				method:"POST",
 				headers:{
 					"Content-Type":"application/json"
@@ -37,11 +41,11 @@ export default{
 			}).then(response=>{
 				this.state.userToken = response.token
 				this.state.myUserId = response.userId;
-				console.log(socket);
+				localStorage.setItem('TOKEN',response.token);
+				localStorage.setItem('myUserId',response.userId);
+				this.TOKEN = response.token;
 				socket.auth = {userId:response.userId};
 				socket.connect();
-				console.log(this.state)
-				console.log('RESPONSE====> ',response.token);
 				this.$router.push("/friends");
 			}).catch(err=>{
 				console.log(err);
@@ -50,7 +54,7 @@ export default{
 	}
 }
 </script>
-<style >
+<style>
 #app{
 	background-image: url('../images/hello_friend.jpg');
 	background-size: cover;

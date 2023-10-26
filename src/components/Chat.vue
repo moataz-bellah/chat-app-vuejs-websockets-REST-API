@@ -15,7 +15,7 @@
   <form>
 <div class="messaging-panel">
       <font-awesome-icon class="bom" icon="fa-solid fa-terminal" size="lg" />
-       <input type="text" placeholder="text" v-model="text">
+       <input type="text" placeholder="text" v-model="text" autofocus>
        <button @click.prevent="sendMessage(text)">+</button>
       </div>
   </form>
@@ -29,10 +29,7 @@ const text = ref('');
 const messages = ref([]);
 const messageRef = ref(null);
 socket.on("private message", ({ message, from,sentAt }) => {
-  console.log("MEEESAAGE ",from);
-  console.log("IDDD ",message);
       messages.value.push({text:message,sender:from,sentAt:sentAt});
-      console.log(messages.value);
 });
 export default {
     props:['userId','friendName'],
@@ -41,13 +38,13 @@ export default {
         return {messages,messageRef,text}
     },
   mounted(){
-console.log("ssssssssssssssssssssss ",moment().format('h:mm a').toString());
-
+//console.log("ssssssssssssssssssssss ",moment().format('h:mm a').toString());
 fetch("http://localhost:3000/chat/messages",{
+  
     method:"POST",
     headers:{
       "Content-Type":"application/json",
-      "Authorization":"Bearer " + this.state.userToken
+      "Authorization":"Bearer " + localStorage.getItem('TOKEN')
     },
     body:JSON.stringify({
       recieverId:this.userId
@@ -55,8 +52,6 @@ fetch("http://localhost:3000/chat/messages",{
   }).then(res=>{
     return res.json()
   }).then(response=>{
-      console.log("RETURNED MESSAGES  ====>  ")
-      console.log(response)
       messages.value = response.messages
   }).catch(err=>{
     console.log(err);
@@ -71,22 +66,19 @@ sendMessage:async function(message){
   let hour = date.getHours();
 	let minutes = date.getMinutes();
 	let night = 'AM';
-	console.log('HOUR ',hour);
-	console.log("Minutes ",minutes);
 			
 	if(hour>12){
 			hour = hour - 12;
 			night = 'PM';
 	}
 			const sentAt = hour.toString() + "." + minutes.toString() + ' ' + night;
-			console.log("SENT AT ",sentAt);
       socket.emit("private message", {
           message,
           to: this.userId,
-          from:this.state.myUserId,
+          from:localStorage.getItem('myUserId'),
           sentAt:sentAt
     });
-  messages.value.push({text:message,sender:this.state.myUserId,sentAt:sentAt});
+  messages.value.push({text:message,sender:localStorage.getItem('myUserId'),sentAt:sentAt});
   await nextTick();
   messageRef.value.scrollTop = messageRef.value.scrollHeight;
   text.value = '';

@@ -1,12 +1,19 @@
 <template>
-  <nav>
-    <router-link to="/signup">Signup</router-link> | 
-    <router-link to="/login">Login </router-link>  
-  </nav>
-  <router-view/>
+  <router-view :TOKEN="TOKEN"/>
 </template>
 <script>
-
+import Navbar from './components/Navbar.vue';
+export default{
+  components:{Navbar},
+  mounted(){
+    this.$router.push('/login');
+  },  
+  data(){
+    return{
+      TOKEN:''
+    }
+  },  
+}
 </script>
 <style>
 :root{
