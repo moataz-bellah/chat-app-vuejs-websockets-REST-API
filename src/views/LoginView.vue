@@ -86,6 +86,8 @@ export default{
 	color: white;
 	border-color:none;
 	border: none;
+	width: 100%;
+	outline:none;
 	padding:20px 20px;
 	margin-top: 10px;
 	margin-bottom: 10px;

@@ -19,7 +19,25 @@ export default{
     props:['token'],
     methods:{
       logout(){
-        localStorage.setItem('TOKEN','')
+        fetch("http://localhost:3000/auth/logout",{
+  
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json",
+              "Authorization":"Bearer " + localStorage.getItem('TOKEN')
+            },
+              body:JSON.stringify({
+              userId:localStorage.getItem('myUserId')
+          })
+              }).then(res=>{
+                    return res.json()
+              }).then(result=>{
+                  localStorage.setItem('TOKEN','')
+                  localStorage.setItem('myUserId','');
+            }).catch(err=>{
+                console.log(err);
+              });
+        
       }
     }
 }

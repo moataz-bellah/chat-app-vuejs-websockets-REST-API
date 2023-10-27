@@ -1,5 +1,7 @@
 <template>
-  <h2>{{ friendName }}</h2>
+  <h2>{{ friendName }} <strong v-if="isOnline">Online</strong>
+    <strong v-else>Offline</strong>
+  </h2>
 <div class="messages" ref="messageRef">
        <div v-for="(message,index) in messages" :key="index" class="message">
           <div v-if="message.sender === userId" class="user-them" :clock="message.sentAt">
@@ -28,14 +30,16 @@ const moment = require('moment');
 const text = ref('');
 const messages = ref([]);
 const messageRef = ref(null);
+//const isOnline = ref(false);
 socket.on("private message", ({ message, from,sentAt }) => {
       messages.value.push({text:message,sender:from,sentAt:sentAt});
 });
+
 export default {
-    props:['userId','friendName'],
+    props:['userId','friendName','isOnline'],
     
     setup(){
-        return {messages,messageRef,text}
+        return {messages,messageRef,text};
     },
   mounted(){
 //console.log("ssssssssssssssssssssss ",moment().format('h:mm a').toString());

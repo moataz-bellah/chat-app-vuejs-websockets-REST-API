@@ -3,16 +3,16 @@
 	<div class="chat-panel">
    
     <div class="friends" ref="messageRef">
-      <h3>Friends {{ currentName }}</h3>
+      <h3>Friends</h3>
          <div class="inner">
           <div class="friends-section">
             <div v-for="friend in friends" :key="friend._id" class="friend">
                 <div class="image">
                   <img src="../images/1.jpg" alt="">
                 </div>
-                <div @click.self="clickMe(friend._id,friend.name)" class="friendDiv">
+                <div @click.self="clickMe(friend._id,friend.name,friend.status)" class="friendDiv">
                   {{friend.name}}
-                  <p>HEllo Darlene i need to talk to you now!!</p>  
+                  <p>Member</p>  
                 </div> 
           </div>
           </div>
@@ -24,7 +24,7 @@
                 </div>
                 <div @click.self="joinRoom(room._id,room.name)" class="friendDiv">
                   {{room.name}}
-                  <p>HEllo Darlene i need to talk to you now!!</p>  
+                  <p>Crew</p>  
                 </div> 
                 
           </div>
@@ -35,7 +35,7 @@
      
     <div class="message-area">
       <div v-if="showChat">
-                <Chat :userId="currentId" :friendName="currentName" :key="currentId"/>
+                <Chat :userId="currentId" :friendName="currentName" :key="currentId" :isOnline="currentStatus"/>
               </div>
       <div v-if="showRoomChat">
               <RoomChat :roomId="currentId" :roomName="currentName" :key="currentId"/>
@@ -97,16 +97,17 @@ export default {
       currentId:'',
       currentName:'',
       showRoomChat:false,
-      TOKEN:localStorage.getItem('TOKEN')
+      TOKEN:localStorage.getItem('TOKEN'),
+      currentStatus:''
     }
   },
   methods:{
-    clickMe(id,name){
+    clickMe(id,name,status){
       this.showRoomChat = false;
       this.showChat = true;
       this.currentId = id;
       this.currentName = name;
-
+      this.currentStatus = status
     },
     joinRoom(roomId,roomName){  
     socket.emit('joinRoom',{roomId,roomName,userId:localStorage.getItem('myUserId')});
@@ -169,6 +170,8 @@ export default {
   padding: 20px 30px;
   background-color: transparent;
   caret-color: green;
+  width: 100%;
+  outline: none;
   border: none;
   color:green;
   border-bottom: 0.5px solid white;
